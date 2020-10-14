@@ -1,5 +1,6 @@
 package br.com.home.api.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +25,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class Request {
+public class Request implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2365091225366075077L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

@@ -1,5 +1,6 @@
 package br.com.home.api.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,8 +22,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity(name = "request_stage")
-public class RequestStage {
+public class RequestStage implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 949718390859766582L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
