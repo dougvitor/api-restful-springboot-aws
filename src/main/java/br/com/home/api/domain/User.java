@@ -14,10 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import br.com.home.api.domain.enums.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class User implements Serializable{

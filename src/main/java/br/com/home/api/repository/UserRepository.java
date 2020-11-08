@@ -11,6 +11,6 @@ import br.com.home.api.domain.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
 
-	@Query("SELECT FROM User WHERE email = ?1 AND password = ?2")
+	@Query("SELECT user FROM User user WHERE email = ?1 AND password = ?2")
 	public Optional<User> login(String username, String password);
 }
