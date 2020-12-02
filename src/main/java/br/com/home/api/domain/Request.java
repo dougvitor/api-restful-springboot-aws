@@ -19,11 +19,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.home.api.domain.enums.RequestState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Request implements Serializable{
 	
@@ -42,7 +46,7 @@ public class Request implements Serializable{
 	@Column(columnDefinition = "text")
 	private String description;
 	
-	@Column(name= "creation_date" , nullable = false)
+	@Column(name= "creation_date" , nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 	

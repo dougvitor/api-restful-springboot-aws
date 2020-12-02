@@ -85,7 +85,7 @@ public class UserRepositoryTests {
 		assertThat(loggedUser.getId()).isEqualTo(1L);
 	}
 	
-	@Test
+	/*@Test
 	@Order(6)
 	public void deleteTest() {
 		Optional<User> result = userRepository.findById(1L);
@@ -96,5 +96,5 @@ public class UserRepositoryTests {
 		result = userRepository.findById(1L);
 		
 		assert(result.isEmpty());
-	}
+	}*/
 }
