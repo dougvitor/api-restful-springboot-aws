@@ -1,5 +1,6 @@
 package br.com.home.api.domain;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class Request implements Serializable{
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -2365091225366075077L;
 
 	@Id
@@ -59,5 +61,5 @@ public class Request implements Serializable{
 	private User owner;
 	
 	@OneToMany(mappedBy = "request")
-	private List<RequestStage> stages = new ArrayList<RequestStage>();
+	private List<RequestStage> stages = new ArrayList<>();
 }

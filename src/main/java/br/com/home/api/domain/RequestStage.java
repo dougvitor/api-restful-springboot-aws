@@ -1,5 +1,6 @@
 package br.com.home.api.domain;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,17 +17,22 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.home.api.domain.enums.RequestState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity(name = "request_stage")
 public class RequestStage implements Serializable{
 	
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 949718390859766582L;
 
 	@Id
@@ -36,7 +42,7 @@ public class RequestStage implements Serializable{
 	@Column(columnDefinition = "text")
 	private String description;
 	
-	@Column(name = "realization_date", nullable = false)
+	@Column(name = "realization_date", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date realizationDate;
 	
