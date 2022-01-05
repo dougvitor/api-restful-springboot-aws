@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import br.com.home.api.domain.enums.Role;
+import br.com.home.api.service.util.HashUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,4 +55,8 @@ public class User implements Serializable{
 	
 	@OneToMany(mappedBy = "owner")
 	private List<RequestStage> stages = new ArrayList<RequestStage>();
+
+	public void setPassword(String password){
+		this.password = HashUtil.getSecureHash(password);
+	}
 }
