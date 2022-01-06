@@ -12,23 +12,23 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User save(User user){
+    public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User update(User user){
+    public User update(User user) {
         return userRepository.save(user);
     }
 
-    public User getById(Long id){
+    public User getById(Long id) {
         return userRepository.findById(id).get();
     }
 
-    public Collection<User> listAll(){
+    public Collection<User> listAll() {
         return userRepository.findAll();
     }
 
-    public User login(String email, String password){
+    public User login(String email, String password) {
         return userRepository.login(email, password).get();
     }
 }

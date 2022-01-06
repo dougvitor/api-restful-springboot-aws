@@ -1,8 +1,9 @@
 package br.com.home.api.resource;
 
 import br.com.home.api.domain.Request;
+import br.com.home.api.domain.RequestStage;
 import br.com.home.api.service.RequestService;
-import lombok.val;
+import br.com.home.api.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,12 @@ public class RequestResource {
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private RequestStageService requestStageService;
+
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody Request request) {
-        val createdRequest = requestService.save(request);
+        var createdRequest = requestService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
@@ -32,13 +36,19 @@ public class RequestResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<Request> getById(@PathVariable Long id) {
-        val request = requestService.getById(id);
+        var request = requestService.getById(id);
         return ResponseEntity.ok(request);
     }
 
     @GetMapping
     public ResponseEntity<Collection<Request>> listAll() {
-        val requests = requestService.listAll();
+        var requests = requestService.listAll();
         return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/{id}/request-stages")
+    public ResponseEntity<Collection<RequestStage>> listAllRequestsById(@PathVariable Long id){
+        var stages = requestStageService.listAllByRequestId(id);
+        return ResponseEntity.ok(stages);
     }
 }
