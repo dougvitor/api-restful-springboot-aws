@@ -3,6 +3,8 @@ package br.com.home.api.resource;
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.User;
 import br.com.home.api.dto.UserLoginDto;
+import br.com.home.api.model.PageModel;
+import br.com.home.api.model.PageRequestModel;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,12 @@ public class UserResource {
     public ResponseEntity<Collection<User>> listAll(){
         var users = userService.listAll();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/list-all-pageable")
+    public ResponseEntity<PageModel<User>> listAllPageable(PageRequestModel pageRequestModel){
+        final PageModel<User> pageModel = userService.listAllOnLazyModel(pageRequestModel);
+        return ResponseEntity.ok(pageModel);
     }
 
     @PostMapping("/login")
