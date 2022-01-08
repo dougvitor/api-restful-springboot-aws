@@ -20,10 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.home.api.domain.enums.RequestState;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -59,7 +57,8 @@ public class Request implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "owner_id", nullable = false)
 	private User owner;
-	
+
+	@Getter(onMethod = @__({@JsonIgnore}))
 	@OneToMany(mappedBy = "request")
 	private List<RequestStage> stages = new ArrayList<>();
 }
