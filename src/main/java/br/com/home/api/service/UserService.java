@@ -1,6 +1,7 @@
 package br.com.home.api.service;
 
 import br.com.home.api.domain.User;
+import br.com.home.api.exception.NotFoundException;
 import br.com.home.api.repository.UserRepository;
 import br.com.home.api.service.util.HashUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("There are not user with id = " + id));
     }
 
     public Collection<User> listAll() {

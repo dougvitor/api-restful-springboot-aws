@@ -2,6 +2,7 @@ package br.com.home.api.service;
 
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.enums.RequestState;
+import br.com.home.api.exception.NotFoundException;
 import br.com.home.api.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class RequestService {
     }
 
     public Request getById(Long id) {
-        return requestRepository.findById(id).get();
+        return requestRepository.findById(id).orElseThrow(() -> new NotFoundException("There are not request with id = " + id));
     }
 
     public Collection<Request> listAll() {

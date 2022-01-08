@@ -2,6 +2,7 @@ package br.com.home.api.service;
 
 import br.com.home.api.domain.RequestStage;
 import br.com.home.api.domain.enums.RequestState;
+import br.com.home.api.exception.NotFoundException;
 import br.com.home.api.repository.RequestRepository;
 import br.com.home.api.repository.RequestStageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class RequestStageService {
     }
 
     public RequestStage getById(Long id) {
-        return requestStageRepository.findById(id).get();
+        return requestStageRepository.findById(id).orElseThrow(() -> new NotFoundException("There are not request stage with id = " + id));
     }
 
     public Collection<RequestStage> listAllByRequestId(long requestId) {
