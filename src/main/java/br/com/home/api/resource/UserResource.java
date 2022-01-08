@@ -66,4 +66,10 @@ public class UserResource {
         var requests = requestService.listAllByOwnerId(id);
         return ResponseEntity.ok(requests);
     }
+
+    @GetMapping("/{id}/requests-pageable")
+    public ResponseEntity<PageModel<Request>> listAllRequestsByIdPageable(@PathVariable Long id, PageRequestModel pageRequestModel){
+        final PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id, pageRequestModel);
+        return ResponseEntity.ok(pageModel);
+    }
 }

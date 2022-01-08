@@ -2,6 +2,9 @@ package br.com.home.api.resource;
 
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.RequestStage;
+import br.com.home.api.domain.User;
+import br.com.home.api.model.PageModel;
+import br.com.home.api.model.PageRequestModel;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +49,21 @@ public class RequestResource {
         return ResponseEntity.ok(requests);
     }
 
+    @GetMapping("/list-all-pageable")
+    public ResponseEntity<PageModel<Request>> listAllPageable(PageRequestModel pageRequestModel){
+        final PageModel<Request> pageModel = requestService.listAllOnLazyModel(pageRequestModel);
+        return ResponseEntity.ok(pageModel);
+    }
+
     @GetMapping("/{id}/request-stages")
     public ResponseEntity<Collection<RequestStage>> listAllRequestsById(@PathVariable Long id){
         var stages = requestStageService.listAllByRequestId(id);
         return ResponseEntity.ok(stages);
+    }
+
+    @GetMapping("/{id}/request-stages-pageable")
+    public ResponseEntity<PageModel<RequestStage>> listAllRequestsById(@PathVariable Long id, PageRequestModel pageRequestModel){
+        final PageModel<RequestStage> pageModel = requestStageService.listAllByRequestIddOnLazyModel(id, pageRequestModel);
+        return ResponseEntity.ok(pageModel);
     }
 }
