@@ -1,6 +1,7 @@
 package br.com.home.api.service;
 
 import br.com.home.api.domain.User;
+import br.com.home.api.domain.enums.Role;
 import br.com.home.api.exception.NotFoundException;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
@@ -50,5 +51,9 @@ public class UserService {
 
     public User login(String email, String password) {
         return userRepository.login(email, HashUtil.getSecureHash(password)).get();
+    }
+
+    public int updateRole(User user){
+        return userRepository.updateRole(user.getId(), user.getRole());
     }
 }

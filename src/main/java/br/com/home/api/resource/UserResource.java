@@ -3,6 +3,7 @@ package br.com.home.api.resource;
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.User;
 import br.com.home.api.dto.UserLoginDto;
+import br.com.home.api.dto.UserUpdateRoleDto;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
 import br.com.home.api.service.RequestService;
@@ -71,5 +72,15 @@ public class UserResource {
     public ResponseEntity<PageModel<Request>> listAllRequestsByIdPageable(@PathVariable Long id, PageRequestModel pageRequestModel){
         final PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id, pageRequestModel);
         return ResponseEntity.ok(pageModel);
+    }
+
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody UserUpdateRoleDto userUpdateRoleDto){
+        User user = new User();
+        user.setId(id);
+        user.setRole(userUpdateRoleDto.getRole());
+        userService.updateRole(user);
+
+        return ResponseEntity.ok().build();
     }
 }
