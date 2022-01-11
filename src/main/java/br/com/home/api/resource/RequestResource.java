@@ -3,6 +3,8 @@ package br.com.home.api.resource;
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.RequestStage;
 import br.com.home.api.domain.User;
+import br.com.home.api.dto.RequestSaveDto;
+import br.com.home.api.dto.RequestUpdateDto;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
 import br.com.home.api.service.RequestService;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -25,13 +28,14 @@ public class RequestResource {
     private RequestStageService requestStageService;
 
     @PostMapping
-    public ResponseEntity<Request> save(@RequestBody Request request) {
-        var createdRequest = requestService.save(request);
+    public ResponseEntity<Request> save(@RequestBody @Valid RequestSaveDto requestSaveDto) {
+        var createdRequest = requestService.save(requestSaveDto.convertToRequest());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Request> update(@RequestBody Request request, @PathVariable Long id) {
+    public ResponseEntity<Request> update(@RequestBody @Valid RequestUpdateDto requestUpdateDto, @PathVariable Long id) {
+        Request request = requestUpdateDto.convertToRequest();
         request.setId(id);
         Request updateUser = requestService.update(request);
         return ResponseEntity.ok(updateUser);

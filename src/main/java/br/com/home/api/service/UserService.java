@@ -1,7 +1,6 @@
 package br.com.home.api.service;
 
 import br.com.home.api.domain.User;
-import br.com.home.api.domain.enums.Role;
 import br.com.home.api.exception.NotFoundException;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
