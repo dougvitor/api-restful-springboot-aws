@@ -1,17 +1,21 @@
 package br.com.home.api.security;
 
-import br.com.home.api.constants.SecurityConstants;
 import br.com.home.api.dto.UserLoginResponseDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
-import static br.com.home.api.constants.SecurityConstants.*;
+
 import java.util.Calendar;
 import java.util.List;
 
+import static br.com.home.api.constants.SecurityConstants.*;
+
 @Component
 public class JwtManager {
-    public UserLoginResponseDto createToken(String email, List<String> roles){
+
+    public UserLoginResponseDto createToken(String email, List<String> roles) {
         Calendar dateExpiration = Calendar.getInstance();
         dateExpiration.add(Calendar.DAY_OF_MONTH, JWT_EXP_DAYS);
         String jwt = Jwts
@@ -25,6 +29,14 @@ public class JwtManager {
         Long expireIn = dateExpiration.getTimeInMillis();
 
         return new UserLoginResponseDto(jwt, expireIn, JWT_PROVIDER);
+    }
+
+    public static Claims parseToken(String jwt) throws JwtException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(API_KEY.getBytes())
+                .parseClaimsJwt(jwt)
+                .getBody();
+        return claims;
     }
 
 }

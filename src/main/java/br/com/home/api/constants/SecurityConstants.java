@@ -10,4 +10,6 @@ public class SecurityConstants {
 
     public static final String JWT_ROLE_KEY = "role";
 
+    public static final String JWT_INVALID_MSG = "Invalid JWT Token";
+
 }
