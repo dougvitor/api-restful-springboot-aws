@@ -2,12 +2,10 @@ package br.com.home.api.resource;
 
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.RequestStage;
-import br.com.home.api.domain.User;
 import br.com.home.api.dto.RequestSaveDto;
 import br.com.home.api.dto.RequestUpdateDto;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
-import br.com.home.api.security.AccessManager;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +26,6 @@ public class RequestResource {
 
     @Autowired
     private RequestStageService requestStageService;
-
-    @Autowired
-    private AccessManager accessManager;
 
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody @Valid RequestSaveDto requestSaveDto) {

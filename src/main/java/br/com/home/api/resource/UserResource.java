@@ -5,7 +5,6 @@ import br.com.home.api.domain.User;
 import br.com.home.api.dto.*;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
-import br.com.home.api.security.AccessManager;
 import br.com.home.api.security.JwtManager;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.UserService;
@@ -40,9 +39,6 @@ public class UserResource {
 
     @Autowired
     private JwtManager jwtManager;
-
-    @Autowired
-    private AccessManager accessManager;
 
     @Secured({"ROLE_ADMINISTRATOR"})
     @PostMapping
