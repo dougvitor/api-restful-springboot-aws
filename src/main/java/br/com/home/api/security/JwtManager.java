@@ -1,6 +1,7 @@
 package br.com.home.api.security;
 
 import br.com.home.api.constants.SecurityConstants;
+import br.com.home.api.dto.UserLoginResponseDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,7 @@ import java.util.List;
 
 @Component
 public class JwtManager {
-
-    public String createToken(String email, List<String> roles){
+    public UserLoginResponseDto createToken(String email, List<String> roles){
         Calendar dateExpiration = Calendar.getInstance();
         dateExpiration.add(Calendar.DAY_OF_MONTH, JWT_EXP_DAYS);
         String jwt = Jwts
@@ -21,7 +21,10 @@ public class JwtManager {
                 .claim(JWT_ROLE_KEY, roles)
                 .signWith(SignatureAlgorithm.HS512, API_KEY.getBytes())
                 .compact();
-        return jwt;
+
+        Long expireIn = dateExpiration.getTimeInMillis();
+
+        return new UserLoginResponseDto(jwt, expireIn, JWT_PROVIDER);
     }
 
 }

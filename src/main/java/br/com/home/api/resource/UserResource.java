@@ -2,10 +2,7 @@ package br.com.home.api.resource;
 
 import br.com.home.api.domain.Request;
 import br.com.home.api.domain.User;
-import br.com.home.api.dto.UserLoginDto;
-import br.com.home.api.dto.UserSaveDto;
-import br.com.home.api.dto.UserUpdateDto;
-import br.com.home.api.dto.UserUpdateRoleDto;
+import br.com.home.api.dto.*;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
 import br.com.home.api.security.JwtManager;
@@ -74,7 +71,7 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDto userLoginDto) {
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginDto userLoginDto) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword());
         Authentication auth = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -85,8 +82,7 @@ public class UserResource {
         String email = userSpring.getUsername();
         List<String> roles = userSpring.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toList());
 
-        String jwt = jwtManager.createToken(email, roles);
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(jwtManager.createToken(email, roles));
     }
 
     @GetMapping("/{id}/requests")
