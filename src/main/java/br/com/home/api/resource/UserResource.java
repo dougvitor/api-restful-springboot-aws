@@ -13,6 +13,10 @@ import br.com.home.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,6 +31,9 @@ public class UserResource {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userSaveDto) {
@@ -62,8 +69,11 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody @Valid UserLoginDto userLoginDto){
-        var loggedUser = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
-        return ResponseEntity.ok(loggedUser);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword());
+        Authentication auth = authenticationManager.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/{id}/requests")
