@@ -11,6 +11,7 @@ import br.com.home.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,7 @@ public class UserResource {
     @Autowired
     private JwtManager jwtManager;
 
+    @Secured({"ROLE_ADMINISTRATOR"})
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userSaveDto) {
         var createdUser = userService.save(userSaveDto.convertToUser());
@@ -97,6 +99,7 @@ public class UserResource {
         return ResponseEntity.ok(pageModel);
     }
 
+    @Secured({"ROLE_ADMINISTRATOR"})
     @PatchMapping("/{id}/role")
     public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody @Valid UserUpdateRoleDto userUpdateRoleDto) {
         User user = new User();
