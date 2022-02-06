@@ -34,7 +34,7 @@ public class JwtManager {
     public static Claims parseToken(String jwt) throws JwtException {
         Claims claims = Jwts.parser()
                 .setSigningKey(API_KEY.getBytes())
-                .parseClaimsJwt(jwt)
+                .parseClaimsJws(jwt)
                 .getBody();
         return claims;
     }
