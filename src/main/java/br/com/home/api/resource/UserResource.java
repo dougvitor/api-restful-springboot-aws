@@ -5,6 +5,7 @@ import br.com.home.api.domain.User;
 import br.com.home.api.dto.*;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
+import br.com.home.api.security.AccessManager;
 import br.com.home.api.security.JwtManager;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +41,9 @@ public class UserResource {
     @Autowired
     private JwtManager jwtManager;
 
+    @Autowired
+    private AccessManager accessManager;
+
     @Secured({"ROLE_ADMINISTRATOR"})
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userSaveDto) {
@@ -46,6 +51,7 @@ public class UserResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    @PreAuthorize("@accessManager.isOwner(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@RequestBody @Valid UserUpdateDto userUpdateDto, @PathVariable Long id) {
         User user = userUpdateDto.convertToUser();

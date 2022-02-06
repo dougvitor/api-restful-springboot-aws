@@ -7,11 +7,13 @@ import br.com.home.api.dto.RequestSaveDto;
 import br.com.home.api.dto.RequestUpdateDto;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
+import br.com.home.api.security.AccessManager;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,12 +29,16 @@ public class RequestResource {
     @Autowired
     private RequestStageService requestStageService;
 
+    @Autowired
+    private AccessManager accessManager;
+
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody @Valid RequestSaveDto requestSaveDto) {
         var createdRequest = requestService.save(requestSaveDto.convertToRequest());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
+    @PreAuthorize("@accessManager.isRequestOwner(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<Request> update(@RequestBody @Valid RequestUpdateDto requestUpdateDto, @PathVariable Long id) {
         Request request = requestUpdateDto.convertToRequest();
