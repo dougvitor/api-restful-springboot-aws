@@ -8,6 +8,7 @@ import br.com.home.api.dto.UserUpdateDto;
 import br.com.home.api.dto.UserUpdateRoleDto;
 import br.com.home.api.model.PageModel;
 import br.com.home.api.model.PageRequestModel;
+import br.com.home.api.security.JwtManager;
 import br.com.home.api.service.RequestService;
 import br.com.home.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "users")
@@ -35,6 +38,9 @@ public class UserResource {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtManager jwtManager;
+
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userSaveDto) {
         var createdUser = userService.save(userSaveDto.convertToUser());
@@ -42,7 +48,7 @@ public class UserResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@RequestBody @Valid UserUpdateDto userUpdateDto, @PathVariable Long id){
+    public ResponseEntity<User> update(@RequestBody @Valid UserUpdateDto userUpdateDto, @PathVariable Long id) {
         User user = userUpdateDto.convertToUser();
         user.setId(id);
         User updateUser = userService.update(user);
@@ -50,46 +56,53 @@ public class UserResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id){
+    public ResponseEntity<User> getById(@PathVariable Long id) {
         var user = userService.getById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<User>> listAll(){
+    public ResponseEntity<Collection<User>> listAll() {
         var users = userService.listAll();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/list-all-pageable")
-    public ResponseEntity<PageModel<User>> listAllPageable(PageRequestModel pageRequestModel){
+    public ResponseEntity<PageModel<User>> listAllPageable(PageRequestModel pageRequestModel) {
         final PageModel<User> pageModel = userService.listAllOnLazyModel(pageRequestModel);
         return ResponseEntity.ok(pageModel);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserLoginDto userLoginDto){
+    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDto userLoginDto) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword());
         Authentication auth = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        return ResponseEntity.ok(null);
+        org.springframework.security.core.userdetails.User userSpring =
+                (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+
+        String email = userSpring.getUsername();
+        List<String> roles = userSpring.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toList());
+
+        String jwt = jwtManager.createToken(email, roles);
+        return ResponseEntity.ok(jwt);
     }
 
     @GetMapping("/{id}/requests")
-    public ResponseEntity<Collection<Request>> listAllRequestsById(@PathVariable Long id){
+    public ResponseEntity<Collection<Request>> listAllRequestsById(@PathVariable Long id) {
         var requests = requestService.listAllByOwnerId(id);
         return ResponseEntity.ok(requests);
     }
 
     @GetMapping("/{id}/requests-pageable")
-    public ResponseEntity<PageModel<Request>> listAllRequestsByIdPageable(@PathVariable Long id, PageRequestModel pageRequestModel){
+    public ResponseEntity<PageModel<Request>> listAllRequestsByIdPageable(@PathVariable Long id, PageRequestModel pageRequestModel) {
         final PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id, pageRequestModel);
         return ResponseEntity.ok(pageModel);
     }
 
     @PatchMapping("/{id}/role")
-    public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody @Valid UserUpdateRoleDto userUpdateRoleDto){
+    public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody @Valid UserUpdateRoleDto userUpdateRoleDto) {
         User user = new User();
         user.setId(id);
         user.setRole(userUpdateRoleDto.getRole());
