@@ -98,7 +98,8 @@ public class UserResource {
     }
 
     @GetMapping("/{id}/requests-pageable")
-    public ResponseEntity<PageModel<Request>> listAllRequestsByIdPageable(@PathVariable Long id, PageRequestModel pageRequestModel) {
+    public ResponseEntity<PageModel<Request>> listAllRequestsByIdPageable(@PathVariable Long id, @RequestParam Map<String, String> params) {
+        PageRequestModel pageRequestModel = new PageRequestModel(params);
         final PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id, pageRequestModel);
         return ResponseEntity.ok(pageModel);
     }

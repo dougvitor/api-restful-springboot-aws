@@ -1,7 +1,6 @@
 package br.com.home.api.service;
 
 import br.com.home.api.domain.Request;
-import br.com.home.api.domain.User;
 import br.com.home.api.domain.enums.RequestState;
 import br.com.home.api.exception.NotFoundException;
 import br.com.home.api.model.PageModel;
@@ -9,7 +8,6 @@ import br.com.home.api.model.PageRequestModel;
 import br.com.home.api.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +39,7 @@ public class RequestService {
     }
 
     public PageModel<Request> listAllOnLazyModel(PageRequestModel pageRequestModel) {
-        Pageable pageable = PageRequest.of(pageRequestModel.getPage(), pageRequestModel.getSize());
+        Pageable pageable = pageRequestModel.toSpringPageRequest();
         final Page<Request> page = requestRepository.findAll(pageable);
         return new PageModel<>(
                 (int) page.getTotalElements(),
@@ -56,7 +54,7 @@ public class RequestService {
     }
 
     public PageModel<Request> listAllByOwnerIdOnLazyModel(Long ownerId, PageRequestModel pageRequestModel){
-        Pageable pageable = PageRequest.of(pageRequestModel.getPage(), pageRequestModel.getSize());
+        Pageable pageable = pageRequestModel.toSpringPageRequest();
         Page<Request> page = requestRepository.findAllByOwnerId(ownerId, pageable);
         return new PageModel<>(
                 (int) page.getTotalElements(),

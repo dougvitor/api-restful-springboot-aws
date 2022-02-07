@@ -8,7 +8,6 @@ import br.com.home.api.repository.UserRepository;
 import br.com.home.api.service.util.HashUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -46,7 +45,7 @@ public class UserService implements UserDetailsService {
     }
 
     public PageModel<User> listAllOnLazyModel(PageRequestModel pageRequestModel) {
-        Pageable pageable = PageRequest.of(pageRequestModel.getPage(), pageRequestModel.getSize());
+        Pageable pageable = pageRequestModel.toSpringPageRequest();
         final Page<User> page = userRepository.findAll(pageable);
         return new PageModel<>(
                 (int) page.getTotalElements(),
