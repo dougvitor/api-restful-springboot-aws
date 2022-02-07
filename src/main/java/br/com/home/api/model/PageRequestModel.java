@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,13 @@ public class PageRequestModel {
 
     private String sort = "";
 
+    private String search = "";
+
     public PageRequestModel(Map<String, String> params){
         if(params.containsKey("page")) page = Integer.parseInt(params.get("page"));
         if(params.containsKey("size")) size = Integer.parseInt(params.get("size"));
         if(params.containsKey("sort")) sort = params.get("sort");
+        if(params.containsKey("search")) search = params.get("search");
     }
 
     public PageRequest toSpringPageRequest(){
