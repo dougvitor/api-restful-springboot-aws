@@ -5,8 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,12 +23,27 @@ public class PageRequestModel {
 
     private int size = 10;
 
+    private String sort = "";
+
     public PageRequestModel(Map<String, String> params){
         if(params.containsKey("page")) page = Integer.parseInt(params.get("page"));
         if(params.containsKey("size")) size = Integer.parseInt(params.get("size"));
+        if(params.containsKey("sort")) sort = params.get("sort");
     }
 
     public PageRequest toSpringPageRequest(){
-        return PageRequest.of(page, size);
+        List<Sort.Order> orders = Arrays.stream(sort.split(","))
+                .filter(prop -> prop.trim().length() > 0)
+                .map(column -> {
+                    column = column.trim();
+                    if(column.startsWith("-")){
+                        column = column.replace("-", "").trim();
+                        return Sort.Order.desc(column);
+                    }
+                    return Sort.Order.asc(column);
+                })
+                .collect(Collectors.toList());
+
+        return PageRequest.of(page, size, Sort.by(orders));
     }
 }
