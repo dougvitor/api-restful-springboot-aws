@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,7 +70,8 @@ public class UserResource {
     }
 
     @GetMapping("/list-all-pageable")
-    public ResponseEntity<PageModel<User>> listAllPageable(PageRequestModel pageRequestModel) {
+    public ResponseEntity<PageModel<User>> listAllPageable(@RequestParam Map<String, String> params) {
+        PageRequestModel pageRequestModel = new PageRequestModel(params);
         final PageModel<User> pageModel = userService.listAllOnLazyModel(pageRequestModel);
         return ResponseEntity.ok(pageModel);
     }

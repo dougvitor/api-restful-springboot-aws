@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "requests")
@@ -55,7 +56,8 @@ public class RequestResource {
     }
 
     @GetMapping("/list-all-pageable")
-    public ResponseEntity<PageModel<Request>> listAllPageable(PageRequestModel pageRequestModel){
+    public ResponseEntity<PageModel<Request>> listAllPageable(@RequestParam Map<String, String> params) {
+        PageRequestModel pageRequestModel = new PageRequestModel(params);
         final PageModel<Request> pageModel = requestService.listAllOnLazyModel(pageRequestModel);
         return ResponseEntity.ok(pageModel);
     }
@@ -67,7 +69,8 @@ public class RequestResource {
     }
 
     @GetMapping("/{id}/request-stages-pageable")
-    public ResponseEntity<PageModel<RequestStage>> listAllRequestsById(@PathVariable Long id, PageRequestModel pageRequestModel){
+    public ResponseEntity<PageModel<RequestStage>> listAllRequestsById(@PathVariable Long id, @RequestParam Map<String, String> params) {
+        PageRequestModel pageRequestModel = new PageRequestModel(params);
         final PageModel<RequestStage> pageModel = requestStageService.listAllByRequestIddOnLazyModel(id, pageRequestModel);
         return ResponseEntity.ok(pageModel);
     }
